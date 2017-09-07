@@ -2,6 +2,50 @@
 Self-Driving Car Engineer Nanodegree Program
 
 ---
+The objective of this project is to implement an MPC controller using c++ to drive a car through a simulator build in unity.
+
+the MPC controller takes into acount a model of the car dynamics, to predict the next states into the future and take the best actuator parameters option.
+
+### Car state
+In this project the car is modeled with a position (px, py), orientation (psi), and velocity (v). also the state includes the cross track error (cte) which is the difference between the actual position of the car and the desired position and a orientation error (epsi) which is the difference between the actual orientation of the car and the desired orientation, the desired position and orientation comes from a reference path, in reality this path could come from a path planning algorithm from the current location to a destination.
+
+x = [ px, py, v, psi, cte, epsi]
+
+### Actuators
+to drive the car, there are only two actuators the steering (δ) and throttle (a),
+the steering is limited to ±25° while the throttle is bounded to ±1, where negative values corresponds to braking or going backwards if the car is already stopped.
+
+actuators = [δ,a]
+
+### Update
+The next state of the car is obtained from the current state, with the following non-linear equations:
+
+* px(t+1) = x(t) + v(t)*cos(psi)*dt
+* py(t+1) = y(t) + v(t)*sin(psi)*dt
+* psi(t+1) = psi(t) + v(t)/Lf*δ(t)*dt
+* v(t+1) = v(t) + a*dt
+* cte(t+1) = cte(t) + v(t)*sin(epsi)*dt
+* epsi(t+1) = epsi(t) + v(t)/Lf*δ(t)*dt
+
+### parameters
+The parameters to be tuned are dt which corresponde the interval between each step where the actuators values are predicted, and N, that correponds the number of steps into the future that the optimization algorithm takes into account.
+dt was set to 0.1, and N was set to 20, at first I chose 0.1 and 10, but as the car speeded up, it failed to keep on track, which makes sense, the faster you go, you'd need to look more ahead.
+
+### Cost Function
+to found a local minima, the optimizer needs a cost function.
+the cost function I chose emphasize in first place to drive smooth, then to maintained the reference orientation as close as posible, as well as being centered, then to use minimum throttle and steering use, finally to maintain a reference speed of 40 mph.
+
+the cost function is then the following:
+
+cost = 400 * cte(t)^2 + 2000 * epsi(t)^2 + (v(t) - ref_v)^2 + 500 * δ(t)^2 + 100*a(t)^2 + 2000 * (δ(t+1)-δ(t))^2 + 1000 * (a(t+1)-a(t))^2
+
+### Result
+
+The video below shows how the MPC controller performs in the driving track
+
+### Conclusions
+
+The MPC controller achieves the goal of driving within the track for at least one lap, but in the curves sometimes it woobles and brakes with non natural manuevering. one reason could be that the optimizer couldn't found the optimal solution in less than 100ms, a solution I can think of, is to apply the actuator results from the previous solution if the optimizer couldn't find a local optima within the range of time. in the future I would also like to add to the cost function, a function to keep the reference velocity only if the steering is close to zero, so It would take the curves with precaution. I tried this multiplying (v(t) - ref_v)^2 by d(t), but the car started to go backwards. I would dig in this problem in the future.
 
 ## Dependencies
 
