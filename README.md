@@ -27,6 +27,11 @@ The next state of the car is obtained from the current state, with the following
 * cte(t+1) = cte(t) + v(t)*sin(epsi)*dt
 * epsi(t+1) = epsi(t) + v(t)/Lf*δ(t)*dt
 
+Lf corresponds to the length of the front of the car to the the center of gravity, it was given.
+
+## Coordinates transformation
+As suggested in the course the points were transform into vehicle coordinates, to achieve that, first all points were translated to zero and use those to recalculate those points with 90° offset.
+
 ### parameters
 The parameters to be tuned are dt which corresponde the interval between each step where the actuators values are predicted, and N, that correponds the number of steps into the future that the optimization algorithm takes into account.
 dt was set to 0.1, and N was set to 20, at first I chose 0.1 and 10, but as the car speeded up, it failed to keep on track, which makes sense, the faster you go, you'd need to look more ahead.
@@ -39,9 +44,13 @@ the cost function is then the following:
 
 cost = 400 * cte(t)^2 + 2000 * epsi(t)^2 + (v(t) - ref_v)^2 + 500 * δ(t)^2 + 100*a(t)^2 + 2000 * (δ(t+1)-δ(t))^2 + 1000 * (a(t+1)-a(t))^2
 
+### Latency
+To consider latency the initial state was calculated 100ms into the future using the update functions with 100ms as dt.
+then was injected into the mpc Solve function.
+
 ### Result
 
-The video below shows how the MPC controller performs in the driving track
+This [video](https://youtu.be/kD9ww455I20) shows how the MPC controller performs in the driving track.
 
 ### Conclusions
 
