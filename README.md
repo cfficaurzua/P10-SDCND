@@ -34,7 +34,7 @@ As suggested in the course the points were transform into vehicle coordinates, t
 
 ### parameters
 The parameters to be tuned are dt which corresponde the interval between each step where the actuators values are predicted, and N, that correponds the number of steps into the future that the optimization algorithm takes into account.
-dt was set to 0.1, and N was set to 20, at first I chose 0.1 and 10, but as the car speeded up, it failed to keep on track, which makes sense, the faster you go, you'd need to look more ahead.
+dt was set to 0.1, and N was set to 15, at first I chose 0.1 and 10, but as the car speeded up, it failed to keep on track, which makes sense, the faster you go, you'd need to look more ahead. when I set N to a greater value, the car makes a sudden move like a whip, probably because the optimizer can solve the problem in less than 100ms. with a larger dt the car drives less smoothly, and if the dt was smaller, the difference is barely perceptible.
 
 ### Cost Function
 to found a local minima, the optimizer needs a cost function.
@@ -50,7 +50,7 @@ then was injected into the mpc Solve function.
 
 ### Result
 
-This [video](https://youtu.be/kD9ww455I20) shows how the MPC controller performs in the driving track.
+This [video](https://www.youtube.com/watch?v=60V6UPPK6S8) shows how the MPC controller performs in the driving track.
 
 ### Conclusions
 
@@ -72,7 +72,7 @@ The MPC controller achieves the goal of driving within the track for at least on
   * Run either `install-mac.sh` or `install-ubuntu.sh`.
   * If you install from source, checkout to commit `e94b6e1`, i.e.
     ```
-    git clone https://github.com/uWebSockets/uWebSockets 
+    git clone https://github.com/uWebSockets/uWebSockets
     cd uWebSockets
     git checkout e94b6e1
     ```
@@ -96,7 +96,7 @@ The MPC controller achieves the goal of driving within the track for at least on
        per this [forum post](https://discussions.udacity.com/t/incorrect-checksum-for-freed-object/313433/19).
   * Linux
     * You will need a version of Ipopt 3.12.1 or higher. The version available through `apt-get` is 3.11.x. If you can get that version to work great but if not there's a script `install_ipopt.sh` that will install Ipopt. You just need to download the source from the Ipopt [releases page](https://www.coin-or.org/download/source/Ipopt/).
-    * Then call `install_ipopt.sh` with the source directory as the first argument, ex: `sudo bash install_ipopt.sh Ipopt-3.12.1`. 
+    * Then call `install_ipopt.sh` with the source directory as the first argument, ex: `sudo bash install_ipopt.sh Ipopt-3.12.1`.
   * Windows: TODO. If you can use the Linux subsystem and follow the Linux instructions.
 * [CppAD](https://www.coin-or.org/CppAD/)
   * Mac: `brew install cppad`
@@ -181,4 +181,3 @@ still be compilable with cmake and make./
 
 ## How to write a README
 A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
-
